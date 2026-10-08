@@ -1,0 +1,81 @@
+RewriteEngine On
+
+Header set Strict-Transport-Security "max-age=31536000" env=HTTPS
+Header set X-Frame-Options "SAMEORIGIN"
+Header set Referrer-Policy "no-referrer"
+Header set X-XSS-Protection "1; mode=block"
+
+RewriteCond %{REMOTE_ADDR} "^63\.148\.99\.2(2[4-9]|[3-4][0-9]|5[0-5])$" [OR] # Cyveillance spybot
+RewriteCond %{REMOTE_ADDR} ^12\.148\.196\.(12[8-9]|1[3-9][0-9]|2[0-4][0-9]|25[0-5])$ [OR] # NameProtect spybot
+RewriteCond %{REMOTE_ADDR} ^12\.148\.209\.(19[2-9]|2[0-4][0-9]|25[0-5])$ [OR] # NameProtect spybot
+RewriteCond %{REMOTE_ADDR} ^64\.140\.49\.6([6-9])$ [OR] # Turnitin spybot
+RewriteCond %{HTTP_REFERER} iaea\.org [OR] # spambot
+RewriteCond %{HTTP_USER_AGENT} ^[A-Z]+$ [OR] # spambot
+RewriteCond %{HTTP_USER_AGENT} anarchie [NC,OR] # OD
+RewriteCond %{HTTP_USER_AGENT} Atomz [OR] # rude bot
+RewriteCond %{HTTP_USER_AGENT} cherry.?picker [NC,OR] # spambot
+RewriteCond %{HTTP_USER_AGENT} "compatible ; MSIE 6.0" [OR] # spambot (note extra space before semicolon)
+RewriteCond %{HTTP_USER_AGENT} crescent [NC,OR] # OD
+RewriteCond %{HTTP_USER_AGENT} "^DA \d\.\d+" [OR] # OD
+RewriteCond %{HTTP_USER_AGENT} "DTS Agent" [OR] # OD
+RewriteCond %{HTTP_USER_AGENT} "^Download" [OR] # OD
+RewriteCond %{HTTP_USER_AGENT} EasyDL/\d\.\d+ [OR] # OD
+RewriteCond %{HTTP_USER_AGENT} e?mail.?(collector|magnet|reaper|siphon|sweeper|harvest|collect|wolf) [NC,OR] # spambot
+RewriteCond %{HTTP_USER_AGENT} express [NC,OR] # OD
+RewriteCond %{HTTP_USER_AGENT} extractor [NC,OR] # OD
+RewriteCond %{HTTP_USER_AGENT} "Fetch API Request" [OR] # OD
+RewriteCond %{HTTP_USER_AGENT} flashget [NC,OR] # OD
+RewriteCond %{HTTP_USER_AGENT} FlickBot [OR] # rude bot
+RewriteCond %{HTTP_USER_AGENT} FrontPage [OR] # stupid user trying to edit my site
+RewriteCond %{HTTP_USER_AGENT} getright [NC,OR] # OD
+RewriteCond %{HTTP_USER_AGENT} go.?zilla [NC,OR] # OD
+RewriteCond %{HTTP_USER_AGENT} "efp@gmx\.net" [OR] # rude bot
+RewriteCond %{HTTP_USER_AGENT} grabber [NC,OR] # OD
+RewriteCond %{HTTP_USER_AGENT} imagefetch [OR] # rude bot
+RewriteCond %{HTTP_USER_AGENT} httrack [NC,OR] # OD
+RewriteCond %{HTTP_USER_AGENT} "Indy Library" [OR] # spambot
+RewriteCond %{HTTP_USER_AGENT} "^Internet Explore" [OR] # spambot
+RewriteCond %{HTTP_USER_AGENT} ^IE\ \d\.\d\ Compatible.*Browser$ [OR] # spambot
+RewriteCond %{HTTP_USER_AGENT} "LINKS ARoMATIZED" [OR] # rude bot
+RewriteCond %{HTTP_USER_AGENT} "Microsoft URL Control" [OR] # spambot
+RewriteCond %{HTTP_USER_AGENT} "mister pix" [NC,OR] # rude bot
+RewriteCond %{HTTP_USER_AGENT} "^Mozilla/4.0$" [OR] # dumb bot
+RewriteCond %{HTTP_USER_AGENT} "^Mozilla/\?\?$" [OR] # formmail attacker
+RewriteCond %{HTTP_USER_AGENT} MSIECrawler [OR] # IE's "make available offline" mode
+RewriteCond %{HTTP_USER_AGENT} ^NG [OR] # unknown bot
+RewriteCond %{HTTP_USER_AGENT} offline [NC,OR] # OD
+RewriteCond %{HTTP_USER_AGENT} net.?(ants|mechanic|spider|vampire|zip) [NC,OR] # OD
+RewriteCond %{HTTP_USER_AGENT} nicerspro [NC,OR] # spambot
+RewriteCond %{HTTP_USER_AGENT} ninja [NC,OR] # Download Ninja OD
+RewriteCond %{HTTP_USER_AGENT} NPBot [OR] # NameProtect spybot
+RewriteCond %{HTTP_USER_AGENT} PersonaPilot [OR] # rude bot
+RewriteCond %{HTTP_USER_AGENT} snagger [NC,OR] # OD
+RewriteCond %{HTTP_USER_AGENT} Sqworm [OR] # rude bot
+RewriteCond %{HTTP_USER_AGENT} SurveyBot [OR] # rude bot
+RewriteCond %{HTTP_USER_AGENT} tele(port|soft) [NC,OR] # OD
+RewriteCond %{HTTP_USER_AGENT} TurnitinBot [OR] # Turnitin spybot
+RewriteCond %{HTTP_USER_AGENT} web.?(auto|bandit|collector|copier|devil|downloader|fetch|hook|mole|miner|mirror|reaper|sauger|sucker|site|snake|stripper|weasel|zip) [NC,OR] # ODs
+RewriteCond %{HTTP_USER_AGENT} vayala [OR] # dumb bot, doesn't know how to follow links, generates lots of 404s
+RewriteCond %{HTTP_USER_AGENT} zeus [NC]
+RewriteRule .* - [F,L]
+
+RewriteRule ^/?([^/]*).html default.php?page=$1
+RewriteRule ^/?([a-zA-Z0-9-]+).html/$ index.php?page=$1
+RewriteRule ^/?([a-zA-Z0-9-]+).html$	index.php?page=$1
+RewriteRule ^/?(my-articles)/([a-zA-Z0-9-]+).html$	index.php?page=my-articles&pagecode=$2
+RewriteRule ^/?(photos)/([a-zA-Z0-9-]+).html$	index.php?page=photos&setID=$2
+RewriteRule ^/?(radios)/([a-zA-Z0-9-]+).html$	index.php?page=radios&code=$2
+
+ErrorDocument 404 http://rajanmaharjan.com/404.htm
+RewriteCond %{HTTP_HOST} ^rajanmaharjan\.com\.np$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.rajanmaharjan\.com\.np$
+RewriteRule ^solutions\/?$ "https\:\/\/blog\.rajanmaharjan\.com\.np\/" [R=301,L]
+RewriteCond %{HTTP_HOST} ^.*$
+RewriteRule ^solutions\.rajanmaharjan\.com$ "https\:\/\/blog\.rajanmaharjan\.com\.np\/" [R=301,L]
+
+# php -- BEGIN cPanel-generated handler, do not edit
+# Set the “ea-php82” package as the default “PHP” programming language.
+<IfModule mime_module>
+  AddHandler application/x-httpd-ea-php82 .php .php8 .phtml
+</IfModule>
+# php -- END cPanel-generated handler, do not edit
